@@ -7,8 +7,9 @@ describe 'opensm class' do
         class { 'opensm': }
       EOS
 
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes => true)
+      # Will fail without infiniband present
+      apply_manifest(pp, :catch_failures => false)
+      apply_manifest(pp, :catch_changes => false)
     end
 
     describe package('opensm') do
@@ -19,9 +20,10 @@ describe 'opensm class' do
       its(:content) { should match /^PRIORITY=0$/ }
     end
 
+    # Service can't start without IB
     describe service('opensm') do
-      it { should be_enabled }
-      it { should be_running }
+      it { should_not be_enabled }
+      it { should_not be_running }
     end
 
   end
@@ -32,8 +34,9 @@ describe 'opensm class' do
         class { 'opensm': priority => 15 }
       EOS
 
-      apply_manifest(pp, :catch_failures => true)
-      apply_manifest(pp, :catch_changes => true)
+      # Will fail without infiniband present
+      apply_manifest(pp, :catch_failures => false)
+      apply_manifest(pp, :catch_changes => false)
     end
 
     describe package('opensm') do
@@ -44,9 +47,10 @@ describe 'opensm class' do
       its(:content) { should match /^PRIORITY=15$/ }
     end
 
+    # Service can't start without IB
     describe service('opensm') do
-      it { should be_enabled }
-      it { should be_running }
+      it { should_not be_enabled }
+      it { should_not be_running }
     end
 
   end
