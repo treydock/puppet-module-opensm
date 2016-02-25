@@ -17,7 +17,7 @@ Facter.add(:infiniband_guids) do
     value = nil
     ibstat = Facter::Core::Execution.which('ibstat')
     if ibstat
-      ibstat_p = Facter::Core::Execution.exec("#{ibstat} -p")
+      ibstat_p = Facter::Core::Execution.exec("#{ibstat} -p 2>/dev/null")
       unless ibstat_p.nil? || ibstat_p.empty?
         value = ibstat_p.split(/\n/).join(',')
       end
