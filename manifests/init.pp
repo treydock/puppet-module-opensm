@@ -7,7 +7,7 @@ class opensm (
   Optional[String] $package_ensure  = undef,
   String $service_config_path       = $opensm::params::service_config_path,
   String $service_name              = $opensm::params::service_name,
-  Integer[0,15] $priority           = 0,
+  Optional[Integer[0,15]] $priority = undef,
   Optional[Array] $guids            = undef
 ) inherits opensm::params {
 

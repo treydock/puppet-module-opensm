@@ -10,12 +10,12 @@ shared_examples 'opensm::config' do |facts|
     })
   end
 
-  it 'sets PRIORITY' do
+  it 'does not set PRIORITY' do
     is_expected.to contain_shellvar('opensm PRIORITY').with({
-      :ensure   => 'present',
+      :ensure   => 'absent',
       :target   => '/etc/sysconfig/opensm',
       :variable => 'PRIORITY',
-      :value    => '0',
+      :value    => nil,
       :notify   => 'Service[opensm]',
     })
   end
@@ -29,6 +29,20 @@ shared_examples 'opensm::config' do |facts|
         :target   => '/etc/sysconfig/opensm',
         :variable => 'GUIDS',
         :value    => '0x1 0x2',
+        :notify   => 'Service[opensm]',
+      })
+    end
+  end
+
+  context 'when priority set' do
+    let(:params) {{ :priority => 15 }}
+
+    it 'sets PRIORITY' do
+      is_expected.to contain_shellvar('opensm PRIORITY').with({
+        :ensure   => 'present',
+        :target   => '/etc/sysconfig/opensm',
+        :variable => 'PRIORITY',
+        :value    => '15',
         :notify   => 'Service[opensm]',
       })
     end

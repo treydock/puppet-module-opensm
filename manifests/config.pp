@@ -11,6 +11,14 @@ class opensm::config {
       $guids_value  = undef
     }
 
+    if $opensm::priority {
+      $priority_ensure = 'present'
+      $priority_value  = $opensm::priority
+    } else {
+      $priority_ensure = 'absent'
+      $priority_value  = undef
+    }
+
     shellvar { 'opensm GUIDS':
       ensure   => $guids_ensure,
       target   => $opensm::service_config_path,
@@ -20,10 +28,10 @@ class opensm::config {
     }
 
     shellvar { 'opensm PRIORITY':
-      ensure   => 'present',
+      ensure   => $priority_ensure,
       target   => $opensm::service_config_path,
       variable => 'PRIORITY',
-      value    => $opensm::priority,
+      value    => $priority_value,
       notify   => $opensm::_notify_service,
     }
   }
