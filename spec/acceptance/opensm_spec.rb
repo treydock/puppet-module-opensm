@@ -17,13 +17,21 @@ describe 'opensm class' do
     end
 
     describe file('/etc/sysconfig/opensm') do
-      its(:content) { should match /^PRIORITY=0$/ }
+      its(:content) { should_not match /^PRIORITY$/ }
     end
 
-    # Service can't start without IB
-    describe service('opensm') do
-      it { should_not be_enabled }
-      it { should_not be_running }
+    case fact('operatingsystemmajrelease')
+    when /6/
+      # Service can't start without IB
+      describe service('opensm') do
+        it { should_not be_enabled }
+        it { should_not be_running }
+      end
+    when /7/
+      describe service('opensm') do
+        it { should be_enabled }
+        it { should be_running }
+      end
     end
 
   end
@@ -47,10 +55,18 @@ describe 'opensm class' do
       its(:content) { should match /^PRIORITY=15$/ }
     end
 
-    # Service can't start without IB
-    describe service('opensm') do
-      it { should_not be_enabled }
-      it { should_not be_running }
+    case fact('operatingsystemmajrelease')
+    when /6/
+      # Service can't start without IB
+      describe service('opensm') do
+        it { should_not be_enabled }
+        it { should_not be_running }
+      end
+    when /7/
+      describe service('opensm') do
+        it { should be_enabled }
+        it { should be_running }
+      end
     end
 
   end
