@@ -38,17 +38,17 @@ class opensm (
   anchor { 'opensm::end': }
 
   if $ensure == 'present' {
-    Anchor['opensm::start']->
-    Class['opensm::install']->
-    Class['opensm::config']->
-    Class['opensm::service']->
-    Anchor['opensm::end']
+    Anchor['opensm::start']
+    -> Class['opensm::install']
+    -> Class['opensm::config']
+    -> Class['opensm::service']
+    -> Anchor['opensm::end']
   } elsif $ensure == 'absent' {
-    Anchor['opensm::start']->
-    Class['opensm::service']->
-    Class['opensm::config']->
-    Class['opensm::install']->
-    Anchor['opensm::end']
+    Anchor['opensm::start']
+    -> Class['opensm::service']
+    -> Class['opensm::config']
+    -> Class['opensm::install']
+    -> Anchor['opensm::end']
   }
 
 }
