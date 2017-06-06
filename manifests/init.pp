@@ -2,15 +2,14 @@
 #
 # See README.md for more details.
 class opensm (
-  $ensure                  = 'present',
-  $package_name            = $opensm::params::package_name,
-  $package_ensure          = undef,
-  $service_config_path     = $opensm::params::service_config_path,
-  $service_name            = $opensm::params::service_name,
-  $priority                = 0,
+  Enum['present', 'absent'] $ensure = 'present',
+  String $package_name              = $opensm::params::package_name,
+  Optional[String] $package_ensure  = undef,
+  String $service_config_path       = $opensm::params::service_config_path,
+  String $service_name              = $opensm::params::service_name,
+  Integer[0,15] $priority           = 0,
+  Optional[Array] $guids            = undef
 ) inherits opensm::params {
-
-  validate_numeric($priority, 15, 0)
 
   case $ensure {
     'present': {
@@ -30,25 +29,18 @@ class opensm (
     }
   }
 
-  include opensm::install
-  include opensm::config
-  include opensm::service
-
-  anchor { 'opensm::start': }
-  anchor { 'opensm::end': }
+  contain opensm::install
+  contain opensm::config
+  contain opensm::service
 
   if $ensure == 'present' {
-    Anchor['opensm::start']
-    -> Class['opensm::install']
+    Class['opensm::install']
     -> Class['opensm::config']
     -> Class['opensm::service']
-    -> Anchor['opensm::end']
   } elsif $ensure == 'absent' {
-    Anchor['opensm::start']
-    -> Class['opensm::service']
+    Class['opensm::service']
     -> Class['opensm::config']
     -> Class['opensm::install']
-    -> Anchor['opensm::end']
   }
 
 }

@@ -1,5 +1,6 @@
 # Private class
 class opensm::install {
+  assert_private()
 
   package { 'opensm':
     ensure => $opensm::_package_ensure,
